@@ -40,3 +40,10 @@ Scenario: Erro ao atualizar a perfil
     Then o sistema deve exibir a mensagem "Erro ao atualizar perfil: Já existe alguém com o Nickname 'admin'" 
     And o sistema deve exibir a mensagem "Tente novamente com outro nome de usuário"
     And ao acessar minha página pública, todos os usuários devem ver as informações do perfil antes da tentativa de atualização
+
+Scenario: Login com perfil não cadastrado
+    Given eu estou na tela "Página inicial" 
+    And eu preencho username com "llucasEmanuel"
+    And eu preencho senha com "lukinhas#123"
+    And eu seleciono "Login"
+    Then eu recebo a mensagem "Conta não cadastrada. Impossível fazer login"
