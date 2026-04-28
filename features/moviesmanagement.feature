@@ -16,3 +16,11 @@ Feature: Gerenciamento de Filmes no Catálogo
     When eu tento adicionar um filme deixando o título em branco e com sinopse "Um filme qualquer"
     Then eu vejo a mensagem de erro "O título é obrigatório"
     And eu continuo na página de adicionar novo filme
+
+ Scenario: Edição de metadados de um filme já existente
+    Given que o sistema possui o filme "O Auto da Compadecida" com sinopse "Sinopse antiga"
+    And eu estou autenticado como administrador
+    And eu estou na página de edição do filme "O Auto da Compadecida"
+    When eu altero a sinopse para "A saga de João Grilo e Chicó"
+    And eu confirmo a alteração
+    Then eu vejo a sinopse "A saga de João Grilo e Chicó" nos detalhes do filme
