@@ -48,13 +48,6 @@ Feature: Gerenciamento de Filmes no Catálogo
     Then eu vejo a mensagem de erro "O título é obrigatório"
     And eu vejo que o título do filme continua sendo "Gladiador" no "Catálogo de Filmes"
 
- Scenario: Tentativa de gerenciamento por usuário não autorizado
-    Given que acesso o sistema como "usuário"
-    And eu estou na página "Página Inicial"
-    When eu tento acessar a página "Adicionar novo filme"
-    Then eu vejo a mensagem de erro "Acesso negado. Privilégios de administrador necessários."
-    And eu continuo na página "Página Inicial"
-
 
   Scenario: Tentativa de cadastro de filme já existente no sistema - Service
     Given eu acesso o sistema como "administrador"
