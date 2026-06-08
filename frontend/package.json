@@ -7,9 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "test:metadata" :  "echo 'Running Metadata GUI tests' && cucumber-js --config='' ../features/MovieMetadata_GUI.feature --import tsx --require 'tests/step_definitions/metadata-steps.ts'",
-    "test:player" :  "echo 'Running Player GUI tests' && cucumber-js --config='' ../features/MoviePlayer_GUI.feature --import tsx --require 'tests/step_definitions/player-steps.ts'",
+    "test:metadata": "echo 'Running Metadata GUI tests' && cucumber-js --config='' ../features/MovieMetadata_GUI.feature --import tsx --require 'tests/step_definitions/metadata-steps.ts'",
+    "test:player": "echo 'Running Player GUI tests' && cucumber-js --config='' ../features/MoviePlayer_GUI.feature --import tsx --require 'tests/step_definitions/player-steps.ts'",
     "test:login": "echo 'Running Login GUI tests' && cucumber-js --config='' ../features/userlogingui.feature --import tsx --require 'tests/step_definitions/userLogin.steps.ts'",
+    "test:moviesmanagement": "echo 'Running Movies Management GUI tests' && cucumber-js --config='' ../features/moviesmanagement.feature:6:50 --import tsx --require 'tests/step_definitions/moviesmanagement_gui.steps.ts'",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^13.0.0",
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.13.1",
     "@types/react": "^19.2.14",
