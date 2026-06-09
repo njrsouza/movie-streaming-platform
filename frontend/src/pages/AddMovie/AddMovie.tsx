@@ -15,7 +15,7 @@ export function AddMovie({ onCancel, movieToEdit }: AddMovieProps) {
   const [synopsis, setSynopsis] = useState(movieToEdit?.synopsis || '');
 
   // Extract number from "120 min" or similar if present
-  const parseDuration = (dur?: string) => dur ? dur.replace(/\D/g, '') : '';
+  const parseDuration = (dur?: string | number) => dur ? String(dur).replace(/\D/g, '') : '';
   const [duration, setDuration] = useState(parseDuration(movieToEdit?.duration));
 
   const [isPopular, setIsPopular] = useState(movieToEdit?.isPopular || false);
