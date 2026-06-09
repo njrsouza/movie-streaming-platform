@@ -12,6 +12,7 @@ export interface Movie {
   cast?: string;
   createdAt: string;
   year?: string;
+  resumePosition?: number;
 }
 
 export interface MovieMetadata {
@@ -50,6 +51,14 @@ export interface History {
   userId: string;
   movieId: string;
   watchedAt: string;
+}
+
+export interface UnfinishedMovieApiRecord {
+  movieId: string;
+  title: string;
+  image?: string | null;
+  progress_percentage: number;
+  last_position: number;
 }
 
 export type PageMessageType = "success" | "error" | "info";

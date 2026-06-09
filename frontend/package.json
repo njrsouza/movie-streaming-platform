@@ -11,12 +11,15 @@
     "test:player": "echo 'Running Player GUI tests' && cucumber-js --config='' ../features/MoviePlayer_GUI.feature --import tsx --require 'tests/step_definitions/player-steps.ts'",
     "test:login": "echo 'Running Login GUI tests' && cucumber-js --config='' ../features/userlogingui.feature --import tsx --require 'tests/step_definitions/userLogin.steps.ts'",
     "test:moviesmanagement": "echo 'Running Movies Management GUI tests' && cucumber-js --config='' ../features/moviesmanagement.feature:6:50 --import tsx --require 'tests/step_definitions/moviesmanagement_gui.steps.ts'",
+    "test:signup": "echo 'Running SignUp State tests' && cucumber-js --config='' ../features/userSignUp.feature --import tsx --require 'tests/step_definitions/userSignUp-steps.ts'",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.13.5",
     "axios": "^1.16.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "react-icons": "^5.6.0",
     "react-router-dom": "^6.28.0"
   },
   "devDependencies": {

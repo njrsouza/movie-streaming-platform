@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+// ✨ Importamos o Navigate aqui para os redirecionamentos de segurança
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import "./App.css";
 
 import { WelcomePage } from "./pages/Welcome/WelcomePage";
@@ -8,6 +9,7 @@ import { HomePage } from "./pages/Home/HomePage";
 import { MinhasPlaylistsPage } from "./pages/MinhasPlaylists/MinhasPlaylistsPage";
 import { HistoryPage } from "./pages/History/HistoryPage";
 import { MovieDetailsPage } from "./pages/MovieDetails/MovieDetailsPage";
+import { Register } from "./pages/Register/register";
 import { AccountPage } from "./pages/Account/AccountPage";
 import { RecomendadosPage } from "./pages/Recomendados/RecomendadosPage";
 import { AddMovie } from "./pages/AddMovie/AddMovie";
@@ -47,6 +49,13 @@ function App() {
     navigate("/");
   }
 
+  // ✨ NOVA FUNÇÃO: Faz o login e envia diretamente para as playlists!
+  function handleRegisterSuccess(user: LoggedUser) {
+    setCurrentUser(user);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+    navigate("/");
+  }
+
   function handleLogout() {
     setCurrentUser(null);
     localStorage.removeItem(STORAGE_KEY);
@@ -55,9 +64,10 @@ function App() {
   }
 
   function handleGoToSignup() {
-    alert("Tela de cadastro será integrada pela feature de Cadastro de Usuário.");
+    navigate("/register");
   }
 
+  // --- FLUXO NÃO AUTENTICADO ---
   if (!currentUser) {
     return (
       <Routes>
@@ -67,6 +77,17 @@ function App() {
             <LoginPage
               onLogin={handleLogin}
               onGoToSignup={handleGoToSignup}
+            />
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            <Register
+              onLogin={handleRegisterSuccess} /*  Passamos a nova função aqui! */
+              onGoToHome={() => navigate("/")} /*  Destino correto */
+              onGoToLogin={() => navigate("/login")}
             />
           }
         />
@@ -86,8 +107,11 @@ function App() {
 
   const currentUserId = currentUser.id;
 
+  // --- FLUXO AUTENTICADO ---
   return (
     <Routes>
+      {/* Rota /register apagada daqui para não causar conflitos com utilizadores logados */}
+
       <Route
         path="/"
         element={
@@ -148,6 +172,7 @@ function App() {
             onGoToHome={() => navigate("/")}
             onGoToPlaylists={() => navigate("/playlists")}
             onGoToHistory={() => navigate("/history")}
+            onGoToProfile={() => navigate("/perfil")}
             onGoToRecommendations={() => navigate("/recommendations")}
             onSelectMovie={(movie) => {
               setSelectedMovie(movie);
@@ -208,6 +233,9 @@ function App() {
           />
         }
       />
+
+      {/* ✨ Rota de segurança: se tentar entrar em local proibido, é redirecionado para a Home */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

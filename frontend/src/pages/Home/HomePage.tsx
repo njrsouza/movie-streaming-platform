@@ -34,6 +34,7 @@ export function HomePage({ userId, isAdmin, onGoToPlaylists, onGoToHome, onGoToH
     title: string;
     image?: string | null;
     progress_percentage: number;
+    last_position: number; 
   }[]>([]);
   const [isLoadingKeepWatching, setIsLoadingKeepWatching] = useState(false);
 
@@ -129,6 +130,35 @@ export function HomePage({ userId, isAdmin, onGoToPlaylists, onGoToHome, onGoToH
       });
     } finally {
       setIsLoadingPlaylists(false);
+    }
+  }
+
+  async function handleResumeMovie(movieId: string, resumePosition: number) {
+    try {
+      // Busca os metadados completos do filme antes de navegar
+      const metadata = await movieService.getMovieDetails(movieId);
+
+      const movieToOpen: Movie = {
+        id: metadata.id,
+        title: metadata.title,
+        url_movie: undefined,
+        img_url: metadata.img_url,
+        synopsis: metadata.synopsis,
+        genres: metadata.genres,
+        isPopular: false,
+        duration: metadata.duration,
+        director: metadata.director,
+        cast: metadata.cast,
+        createdAt: new Date().toISOString(),
+        year: metadata.year,
+        resumePosition,
+      };
+
+      onSelectMovie(movieToOpen);
+    } catch (err) {
+      console.error("Erro ao carregar metadados do filme para retomar:", err);
+      // Fallback: navegar apenas com id e título mínimo
+      onSelectMovie({ id: movieId, title: "Filme", genres: "", isPopular: false, createdAt: new Date().toISOString(), } as Movie);
     }
   }
 
@@ -249,7 +279,7 @@ export function HomePage({ userId, isAdmin, onGoToPlaylists, onGoToHome, onGoToH
                     title={item.title}
                     thumbnailUrl={item.image ?? undefined}
                     progressPercentage={item.progress_percentage}
-                    onClick={() => console.log(`Clicou no filme: ${item.title}`)}
+                    onClick={() => handleResumeMovie(item.movieId, item.last_position)}
                   />
                 </div>
               ))}
