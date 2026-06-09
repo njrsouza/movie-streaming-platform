@@ -55,7 +55,19 @@ async function main() {
     },
   });
 
-  console.log("🍿 Criando catálogo de filmes ativos e populares...");
+  
+  const hashExemplo = await bcrypt.hash("123456Ll", salt); // Mesma senha usada no seu .feature
+  
+  const usuarioExemplo = await prisma.user.create({
+    data: {
+      id: "usuario-exemplo-id",
+      name: "João",
+      email: "exemplo@test.com",
+      password: hashExemplo,
+    }
+  });
+
+  console.log('🍿 Criando catálogo de filmes ativos e populares...');
   // Filmes de Ação
   const v1 = await prisma.movie.create({
     data: { title: "Vingadores: Ultimato", genres: "Ação", isPopular: true, isDeleted: false, synopsis: "O confronto final contra Thanos.", duration: "181" }
