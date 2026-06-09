@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { movieService } from '../../services/movieService';
 import type { Movie } from '../../types';
-
+import { SuccessModal } from './SuccessModal';
+import { ConfirmEditModal } from './ConfirmEditModal';
 interface AddMovieProps {
   onCancel: () => void;
   movieToEdit?: Movie | null;
@@ -14,7 +15,7 @@ export function AddMovie({ onCancel, movieToEdit }: AddMovieProps) {
   const [synopsis, setSynopsis] = useState(movieToEdit?.synopsis || '');
 
   // Extract number from "120 min" or similar if present
-  const parseDuration = (dur?: string) => dur ? dur.replace(/\D/g, '') : '';
+  const parseDuration = (dur?: string | number) => dur ? String(dur).replace(/\D/g, '') : '';
   const [duration, setDuration] = useState(parseDuration(movieToEdit?.duration));
 
   const [isPopular, setIsPopular] = useState(movieToEdit?.isPopular || false);
@@ -387,71 +388,25 @@ export function AddMovie({ onCancel, movieToEdit }: AddMovieProps) {
 
       {/* Success Modal */}
       {showSuccessModal && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-          <div className="bg-[#1c1b1f] border-t-4 border-[#ffc107] rounded-xl p-8 flex flex-col items-center max-w-[400px] w-full shadow-2xl">
-            <div className="w-16 h-16 bg-[#3f3100] border border-[#ffc107]/20 rounded-2xl flex items-center justify-center mb-6">
-              <span className="material-symbols-outlined text-[#ffc107] text-[32px]">check_circle</span>
-            </div>
-
-            <h3 className="text-2xl text-on-background font-medium mb-2">Sucesso!</h3>
-            <p className="text-center text-on-surface-variant mb-8">
-              Filme <strong className="text-[#ffc107]">"{title}"</strong> {isEditing ? "atualizado" : "adicionado"} com sucesso ao catálogo.
-            </p>
-
-            <div className="flex flex-col gap-3 w-full">
-              <button
-                onClick={handleAddAnother}
-                className="w-full py-3 bg-[#ffc107] text-[#3f2e00] font-medium rounded hover:opacity-90 flex items-center justify-center gap-2 transition-opacity"
-              >
-                <span className="material-symbols-outlined text-[20px]">add</span>
-                Adicionar outro filme
-              </button>
-              <button
-                onClick={() => {
-                  setShowSuccessModal(false);
-                  onCancel();
-                }}
-                className="w-full py-3 bg-transparent border border-outline text-on-background font-medium rounded hover:bg-surface-container-highest flex items-center justify-center gap-2 transition-colors"
-              >
-                <span className="material-symbols-outlined text-[20px]">grid_view</span>
-                Ir para o catálogo
-              </button>
-            </div>
-          </div>
-        </div>
+        <SuccessModal
+          title={title}
+          isEditing={isEditing}
+          onAddAnother={handleAddAnother}
+          onGoToCatalog={() => {
+            setShowSuccessModal(false);
+            onCancel();
+          }}
+        />
       )}
+
       {/* Edit Confirmation Modal */}
       {showEditConfirmModal && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-          <div className="bg-[#1c1b1f] border-t-4 border-[#ffc107] rounded-xl p-8 flex flex-col items-center max-w-[400px] w-full shadow-2xl">
-            <div className="w-16 h-16 bg-[#3f3100] border border-[#ffc107]/20 rounded-2xl flex items-center justify-center mb-6">
-              <span className="material-symbols-outlined text-[#ffc107] text-[32px]">edit</span>
-            </div>
-
-            <h3 className="text-2xl text-on-background font-medium mb-2">Salvar Alterações</h3>
-            <p className="text-center text-on-surface-variant mb-8">
-              Tem certeza que deseja aplicar as alterações no filme <strong className="text-[#ffc107]">"{title}"</strong>?
-            </p>
-
-            <div className="flex flex-col gap-3 w-full">
-              <button
-                onClick={executeSave}
-                disabled={isSubmitting}
-                className="w-full py-3 bg-[#ffc107] text-[#3f2e00] font-medium rounded hover:opacity-90 flex items-center justify-center gap-2 transition-opacity disabled:opacity-50"
-              >
-                <span className="material-symbols-outlined text-[20px]">{isSubmitting ? "hourglass_empty" : "save"}</span>
-                {isSubmitting ? "Salvando..." : "Sim, salvar alterações"}
-              </button>
-              <button
-                onClick={() => setShowEditConfirmModal(false)}
-                disabled={isSubmitting}
-                className="w-full py-3 bg-transparent border border-outline text-on-background font-medium rounded hover:bg-surface-container-highest flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
-              >
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmEditModal
+          title={title}
+          isSubmitting={isSubmitting}
+          onConfirm={executeSave}
+          onCancel={() => setShowEditConfirmModal(false)}
+        />
       )}
     </main>
   );
